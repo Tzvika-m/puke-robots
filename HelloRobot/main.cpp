@@ -15,7 +15,7 @@
 using namespace std;
 using namespace PlayerCc;
 
-
+// note
 int main() {
 
 	// Read the config file and init
