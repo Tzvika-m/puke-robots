@@ -16,7 +16,7 @@ struct size
 };
 
 // Globals declaration
-const char* filePath = "Resources/config.txt";
+const char* filePath = "Config.txt";
 string mapFilePath = "";
 position startPostion;
 int startYaw;

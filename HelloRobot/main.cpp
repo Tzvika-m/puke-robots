@@ -15,11 +15,11 @@
 using namespace std;
 using namespace PlayerCc;
 
-// note
+// note 2
 int main() {
 
 	// Read the config file and init
-	//ReadConfigFile();
+	 ReadConfigFile();
 	robotSize.width = 1;
 
 	unsigned error;
