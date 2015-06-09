@@ -8,33 +8,70 @@
 #include <iostream>
 #include <libplayerc++/playerc++.h>
 #include <fstream>
+#include "Resources/ThirdParty/lodepng.h"
+#include "Resources/ThirdParty/pngUtil.h"
+#include "MapUtils.h"
+#include "Main.h"
 using namespace std;
-
-
 using namespace PlayerCc;
 
-// Struct definition
-struct position
-{
-	int x;
-	int y;
-};
 
-struct size
-{
-	int width;
-	int height;
-};
+int main() {
 
-// Globals declaration
-const char* filePath = "Resources/config.txt";
-string mapFilePath = "";
-position startPostion;
-int startYaw;
-position destination;
-size robotSize;
-int mapResolution;
-int gridSize;
+	// Read the config file and init
+	//ReadConfigFile();
+	robotSize.width = 1;
+
+	unsigned error;
+	unsigned char* image;
+
+	unsigned width, height;
+
+	error = lodepng_decode24_file(&image, &width, &height, "Resources/Images/1.png");
+
+	Map readMap = MakePixelMap(image, width, height);
+
+	cout<<"read map:"<<endl;
+	PrintMap(readMap);
+
+	Map inflatedMap = MakeInflatedMap(readMap, robotSize.width);
+
+	cout<<"inflated map:"<<endl;
+	PrintMap(inflatedMap);
+
+	cout<<"hello";
+	// free(image);
+
+
+	PlayerClient pc("localhost", 6665);
+	SonarProxy lp(&pc);
+	Position2dProxy pp(&pc);
+
+	pp.SetMotorEnable(true);
+
+	//pp.SetSpeed(0.0, 0.0);
+
+	while (true) {
+		pc.Read();
+
+		if (lp[2] < 0.802) {
+
+			//if(lp[0] < 0.9 || lp[1] < 0.9) {
+				pp.SetSpeed(0.0, 0.3);
+			//} else if(lp[4] < 0.9 || lp[3] < 0.9) {
+				//pp.SetSpeed(0.0,-0.3);
+			//}
+
+			//pp.SetSpeed(0.0, 0.3);
+		}
+		else
+			pp.SetSpeed(1, 0.0);
+	}
+	return 0;
+
+}
+
+
 
 void ReadConfigFile()
 {
@@ -69,38 +106,5 @@ void ReadConfigFile()
 
 		configFile.close();
 	}
-
-}
-
-int main() {
-
-	// Read the config file and init
-	ReadConfigFile();
-
-	PlayerClient pc("localhost", 6665);
-	SonarProxy lp(&pc);
-	Position2dProxy pp(&pc);
-
-	pp.SetMotorEnable(true);
-
-	//pp.SetSpeed(0.0, 0.0);
-
-	while (true) {
-		pc.Read();
-
-		if (lp[2] < 0.802) {
-
-			//if(lp[0] < 0.9 || lp[1] < 0.9) {
-				pp.SetSpeed(0.0, 0.3);
-			//} else if(lp[4] < 0.9 || lp[3] < 0.9) {
-				//pp.SetSpeed(0.0,-0.3);
-			//}
-
-			//pp.SetSpeed(0.0, 0.3);
-		}
-		else
-			pp.SetSpeed(1, 0.0);
-	}
-	return 0;
 
 }
