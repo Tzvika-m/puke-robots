@@ -22,8 +22,9 @@ position startPostion;
 int startYaw;
 position destination;
 size robotSize;
-int mapResolution;
-int gridSize;
+double mapResolution;
+double gridSize;
 
 // Fucntions declerations
 void ReadConfigFile();
+

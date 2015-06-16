@@ -15,57 +15,73 @@
 using namespace std;
 using namespace PlayerCc;
 
-// note 2
 int main() {
 
 	// Read the config file and init
-	 ReadConfigFile();
-	robotSize.width = 1;
+	ReadConfigFile();
+	//robotSize.width = 1;
 
 	unsigned error;
 	unsigned char* image;
-
 	unsigned width, height;
 
-	error = lodepng_decode24_file(&image, &width, &height, "Resources/Images/1.png");
+	// TODO: change to map path from the file
+	error = lodepng_decode24_file(&image, &width, &height, "Resources/Images/3.png");
 
 	Map readMap = MakePixelMap(image, width, height);
 
 	cout<<"read map:"<<endl;
 	PrintMap(readMap);
 
+	Map scaled = AlterMapByScale(readMap, mapResolution / gridSize);
+	cout<<"after scaling:"<<endl;
+
+	PrintMap(scaled);
+
+	// TODO: change the factor to robotsize
 	Map inflatedMap = MakeInflatedMap(readMap, robotSize.width);
 
 	cout<<"inflated map:"<<endl;
-	PrintMap(inflatedMap);
+	//PrintMap(inflatedMap);
 
 	cout<<"hello";
 	// free(image);
 
 
 	PlayerClient pc("localhost", 6665);
-	SonarProxy lp(&pc);
+	SonarProxy sp(&pc);
+	LaserProxy lp(&pc);
 	Position2dProxy pp(&pc);
 
 	pp.SetMotorEnable(true);
 
 	//pp.SetSpeed(0.0, 0.0);
 
+	pp.SetSpeed(1, 0.0);
+
 	while (true) {
 		pc.Read();
 
-		if (lp[2] < 0.802) {
+		for(int i=0;i<730;i+=30)
+		{
+			cout<<i<<" : "<<lp[i]<<endl;
+		}
+
+
+		//
+
+		//if (lp[2] < 0.802) {
 
 			//if(lp[0] < 0.9 || lp[1] < 0.9) {
-				pp.SetSpeed(0.0, 0.3);
+				pp.SetSpeed(0.0, 0.1);
 			//} else if(lp[4] < 0.9 || lp[3] < 0.9) {
 				//pp.SetSpeed(0.0,-0.3);
 			//}
 
 			//pp.SetSpeed(0.0, 0.3);
-		}
-		else
-			pp.SetSpeed(1, 0.0);
+		//}
+		//else
+		//	pp.SetSpeed(1, 0.0);
 	}
 	return 0;
 
