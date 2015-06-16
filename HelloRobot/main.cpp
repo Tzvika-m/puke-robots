@@ -49,6 +49,8 @@ int main() {
 	// free(image);
 
 
+	// stam shura hasmal
+
 	PlayerClient pc("localhost", 6665);
 	SonarProxy sp(&pc);
 	LaserProxy lp(&pc);
