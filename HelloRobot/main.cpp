@@ -16,7 +16,8 @@ using namespace std;
 using namespace PlayerCc;
 
 int main() {
-// Tzvika upstream
+	//Matan dirbuk
+
 	// Read the config file and init
 	ReadConfigFile();
 	//robotSize.width = 1;
